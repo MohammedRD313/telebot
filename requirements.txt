@@ -1,2 +1,2 @@
-upgrade 
-OpsAi
+pip install pyrogram
+pip install pyromod
