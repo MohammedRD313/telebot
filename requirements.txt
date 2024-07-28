@@ -1,4 +1,6 @@
 telethon
+OpsAi
+Ai
 pydub
 ocrspace
 ShazamAPI
