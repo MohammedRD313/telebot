@@ -5,6 +5,7 @@ pydub
 ocrspace
 ShazamAPI
 selenium
+torch
 Flask
 flask_restful
 setuptools
