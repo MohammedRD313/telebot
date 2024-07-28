@@ -1,4 +1,4 @@
-from OpsAi import Ai
+import Ai
 from pyrogram import Client,filters
 
 API_ID = 14170449
