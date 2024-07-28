@@ -2,3 +2,4 @@ OpsAi
 Ai
 requests
 pyrogram
+torch
