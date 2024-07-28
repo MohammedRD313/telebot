@@ -1,4 +1,2 @@
- telebot
-telethon
 upgrade 
 OpsAi
