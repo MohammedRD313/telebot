@@ -1,2 +1,3 @@
-OpsAi
+Ops
+Ai
 pyrogram
