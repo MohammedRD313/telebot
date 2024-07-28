@@ -1,30 +1,42 @@
 import telebot
-from telethon.sync import TelegramClient
-from telethon.sessions import StringSession
+import requests
+import random
 
-# استبدل TOKEN بالتوكن الخاص بالبوت الخاص بك
-TOKEN = '7202104518:AAFeZK4Dz9GclJKV0kXOG1Vr9jY3BhPazzU'
-bot = telebot.TeleBot(TOKEN)
+tok = '7202104518:AAFeZK4Dz9GclJKV0kXOG1Vr9jY3BhPazzU'
+#هنا خلي توكن بوتك
+
+bot = telebot.TeleBot(tok)
 
 @bot.message_handler(commands=['start'])
-def start(message):
-    bot.reply_to(message, "🔼 مرحبًا! لإعداد الجلسة، يرجى إدخال APP ID و API HASH.")
-
+def send_welcome(message):
+    bot.reply_to(message, "أهلاً بك! أرسل لي الرابط الذي تريد الرشق إليه.")
+    
 @bot.message_handler(func=lambda message: True)
-def get_credentials(message):
-    try:
-        # الحصول على APP ID و API HASH
-        app_id = int(message.text.split()[0])
-        api_hash = message.text.split()[1]
+def handle_link(message):
+    link = message.text
+    bot.reply_to(message, "جاري معالجة الرابط...")
+    
+    usr = 'qwertyuiopasdfghjklzxcvbnm'
+    m = 0
+    for _ in range(10):
+        rnd = str("".join(random.choice(usr) for _ in range(6)))
+        linkk = link + '?' + rnd
+        data = {
+            "key": "9ebf8fc4c3a0db827dfe41ac19c545c7",
+            "action": "add",
+            "service": "12505",
+            "link": linkk,
+            "quantity": "100"
+        }
+        m += 100
+        url = "https://kd1s.com/api/v2"
+        try:
+            orde = requests.post(url, data=data).json()
+            order = orde["order"]
+            bot.send_message(message.chat.id, f"Order : {order}\nNumber : {m}\nlink : {link}\nBY : @PY_50")
+        except Exception as e:
+            print(e)
+            bot.send_message(message.chat.id, f"Message_Error{str(e)}")
+            break
 
-        with TelegramClient(StringSession(), app_id, api_hash) as client:
-            session_str = client.session.save()
-            bot.send_message(message.chat.id, session_str)
-            bot.send_message(message.chat.id, "🔼 هذا هو كود التيرمكس الخاص بك لا تعطيه لأي شخص لان معرض للاختراق ❤️ @Scorpions_scorp")
-            print("تم إرسال StringSession إلى المحادثة.")
-
-    except Exception as e:
-        bot.reply_to(message, f"حدث خطأ: {str(e)}. تأكد من إدخال APP ID و API HASH بشكل صحيح.")
-
-# بدء تشغيل البوت
 bot.polling()
