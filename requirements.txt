@@ -1,2 +1,4 @@
 OpsAi
+Ai
+requests
 pyrogram
