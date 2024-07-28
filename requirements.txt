@@ -2,4 +2,4 @@ telebot
 telethon
 pyTelegramBotAPI
 pyrogram
---upgrade OpsAi
+upgrade OpsAi
