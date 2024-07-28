@@ -2,3 +2,4 @@ telethon
 telebot
 pyrogram
 pyromod
+OpsAi
