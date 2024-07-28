@@ -1,5 +1,4 @@
  telebot
 telethon
-pyTelegramBotAPI
 upgrade 
 OpsAi
