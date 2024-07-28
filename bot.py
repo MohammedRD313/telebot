@@ -1,42 +1,53 @@
 import telebot
+from telebot import types 
 import requests
-import random
+from telebot.types import InlineKeyboardButton as Btn , InlineKeyboardMarkup as Mak
+token = "7202104518:AAFeZK4Dz9GclJKV0kXOG1Vr9jY3BhPazzU"
+bot = telebot.TeleBot(token)
+bot.set_my_commands([telebot.types.BotCommand("/start", "🤖 تشغيل البوت")])
 
-tok = '7202104518:AAFeZK4Dz9GclJKV0kXOG1Vr9jY3BhPazzU'
-#هنا خلي توكن بوتك
-
-bot = telebot.TeleBot(tok)
-
-@bot.message_handler(commands=['start'])
-def send_welcome(message):
-    bot.reply_to(message, "أهلاً بك! أرسل لي الرابط الذي تريد الرشق إليه.")
+@bot.message_handler(commands=["start"])
+def start(message):
+    markup = types.InlineKeyboardMarkup()
     
-@bot.message_handler(func=lambda message: True)
-def handle_link(message):
-    link = message.text
-    bot.reply_to(message, "جاري معالجة الرابط...")
+    wevy = types.InlineKeyboardButton("مطور البوت 👨‍🔧", url='https://t.me/PY_50')
+    wev = types.InlineKeyboardButton("قناتي", url='https://t.me/ttxxxn')
+    markup.add(wevy,wev)
+    name = message.from_user.first_name
+    bot.reply_to(message,f'''<b>مرحباً {name}
+-! في بـوت تحميل من تيكـتوك ارسـل
+الان رابـط لتحميل من فضلك .</b>''',parse_mode='HTML',reply_markup=markup)
+	
+@bot.message_handler(func=lambda brok:True)
+def Url(message):
+		markup = types.InlineKeyboardMarkup()
     
-    usr = 'qwertyuiopasdfghjklzxcvbnm'
-    m = 0
-    for _ in range(10):
-        rnd = str("".join(random.choice(usr) for _ in range(6)))
-        linkk = link + '?' + rnd
-        data = {
-            "key": "9ebf8fc4c3a0db827dfe41ac19c545c7",
-            "action": "add",
-            "service": "12505",
-            "link": linkk,
-            "quantity": "100"
-        }
-        m += 100
-        url = "https://kd1s.com/api/v2"
-        try:
-            orde = requests.post(url, data=data).json()
-            order = orde["order"]
-            bot.send_message(message.chat.id, f"Order : {order}\nNumber : {m}\nlink : {link}\nBY : @PY_50")
-        except Exception as e:
-            print(e)
-            bot.send_message(message.chat.id, f"Message_Error{str(e)}")
-            break
+		wev = types.InlineKeyboardButton("تم التحميل بواسطه", url='https://t.me/ttxxxn')
+		markup.add(wev)
+		try:
+			msgg = bot.send_message(message.chat.id, "*جاري التحميل ...*",parse_mode="markdown")
+			msg = message.text
+			url = requests.get(f'https://tikwm.com/api/?url={msg}').json()
+			music = url['data']['music']
+			region = url['data']['region']
+			tit = url['data']['title']
+			vid = url['data']['play']
+			ava = url['data']['author']['avatar']
+			##
+			name = url['data']['music_info']['author']
+			time = url['data']['duration']
+			sh = url['data']['share_count']
+			com = url['data']['comment_count']
+			wat = url['data']['play_count']
+			bot.delete_message(chat_id=message.chat.id, message_id=msgg.message_id)
+			bot.send_photo(message.chat.id,ava,caption=f'- اسم الحساب : *{name}*\n - دوله الحساب : *{region}*\n\n- عدد مرات المشاهدة : *{wat}*\n- عدد التعليقات : *{com}*\n- عدد مرات المشاركة : *{sh}*\n- طول الفيديو : *{time}*',parse_mode="markdown")
 
-bot.polling()
+			bot.send_video(message.chat.id,vid, caption=f"{tit}",reply_markup=markup)
+		except:
+			pass
+			bot.delete_message(chat_id=message.chat.id, message_id=msgg.message_id)
+			bot.reply_to(message,'error );')
+
+
+print('run')
+bot.infinity_polling()
