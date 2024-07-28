@@ -1,3 +1,2 @@
-upgrade 
-OpsAi
+upgrade OpsAi
 pyrogram
