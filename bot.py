@@ -1,30 +1,44 @@
-import telebot
-from telethon.sync import TelegramClient
-from telethon.sessions import StringSession
+from OpsAi import Ai
+from pyrogram import Client,filters
 
-# استبدل TOKEN بالتوكن الخاص بالبوت الخاص بك
-TOKEN = '7202104518:AAFeZK4Dz9GclJKV0kXOG1Vr9jY3BhPazzU'
-bot = telebot.TeleBot(TOKEN)
+API_ID = 14170449
+API_HASH = "03488b3c030fe095667e7ca22fe34954"
+TOKEN = "7202104518:AAFeZK4Dz9GclJKV0kXOG1Vr9jY3BhPazzU:"
+app = Client("ChatGpt", api_id=API_ID,api_hash=API_HASH,bot_token=TOKEN) 
 
-@bot.message_handler(commands=['start'])
-def start(message):
-    bot.reply_to(message, "🔼 مرحبًا! لإعداد الجلسة، يرجى إدخال APP ID و API HASH.")
 
-@bot.message_handler(func=lambda message: True)
-def get_credentials(message):
-    try:
-        # الحصول على APP ID و API HASH
-        app_id = int(message.text.split()[0])
-        api_hash = message.text.split()[1]
+@app.on_message(filters.command("start"))
+async def StartMsg(_,msg):
+ await msg.reply("Hello: I am ChatGpt")
+ 
+@app.on_message(filters.command("بوت",""))
+async def YesSir(_,msg):
+ await msg.reply("مرحبا بك عزيزي : اسمي هو ميجا")
+ 
 
-        with TelegramClient(StringSession(), app_id, api_hash) as client:
-            session_str = client.session.save()
-            bot.send_message(message.chat.id, session_str)
-            bot.send_message(message.chat.id, "🔼 هذا هو كود التيرمكس الخاص بك لا تعطيه لأي شخص لان معرض للاختراق ❤️ @Scorpions_scorp")
-            print("تم إرسال StringSession إلى المحادثة.")
+@app.on_message(filters.private & ~filters.reply)
+async def echo(bot, msg):
+    a = msg.text
+    s = Ai(query = a)
+    await bot.send_message(chat_id=msg.chat.id, text=s.chat()) 
+    
 
-    except Exception as e:
-        bot.reply_to(message, f"حدث خطأ: {str(e)}. تأكد من إدخال APP ID و API HASH بشكل صحيح.")
-
-# بدء تشغيل البوت
-bot.polling()
+@app.on_message(filters.text)
+async def reply(bot, msg):
+  try:
+    if  msg.reply_to_message.from_user.is_bot:
+    	a = msg.text
+    	s = Ai(query = a)
+    	await msg.reply_text(text=s.chat(),quote=True)
+  except:pass
+    
+@app.on_message(filters.regex(r"^ميجا (.+)"),group=-1)
+async def reply_with_text(bot, msg):
+    a = msg.text.split(None,1)[1]
+    s = Ai(query = a)
+    await msg.reply_text(text=s.chat(),quote=True)
+    
+    
+ 
+print("Run..")   
+app.run()
