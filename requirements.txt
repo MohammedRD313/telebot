@@ -76,7 +76,6 @@
  uuid
  secrets
  datetime
- *
  argparse
  InstagramAPI
  sleep
@@ -91,4 +90,5 @@
  token_hex
  Fore
  secrets
- uuid re
+ uuid 
+ re
