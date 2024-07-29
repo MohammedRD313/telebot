@@ -1,5 +1,2 @@
-OpsAi
-Ai
-requests
-pyrogram
-torch
+telebot
+random
