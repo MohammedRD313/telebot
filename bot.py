@@ -1,44 +1,28 @@
-from OpsAi import Ai
-from pyrogram import Client,filters
+import telebot
+import random
 
-API_ID = "21428087"
-API_HASH = "03488b3c030fe095667e7ca22fe34954"
-TOKEN = "7231254366:AAHkHtHowT9Sd5iBVJNTqNMdN51uvLPrGsk:"
-app = Client("ChatGpt", api_id=API_ID,api_hash=API_HASH,bot_token=TOKEN) 
+# أدخل توكن البوت هنا مباشرة
+TOKEN = '7231254366:AAHkHtHowT9Sd5iBVJNTqNMdN51uvLPrGsk'
+bot = telebot.TeleBot(TOKEN)
 
+# دالة بسيطة لتوليد ردود عشوائية
+def gpt(user_input):
+    responses = [
+        "هذا مثير جدًا!",
+        "كيف يمكنني مساعدتك اليوم؟",
+        "أخبرني المزيد.",
+        "هذا يبدو رائعًا!",
+        "أنا هنا للمساعدة!"
+    ]
+    return random.choice(responses)
 
-@app.on_message(filters.command("start"))
-async def StartMsg(_,msg):
- await msg.reply("Hello: I am ChatGpt")
- 
-@app.on_message(filters.command("بوت",""))
-async def YesSir(_,msg):
- await msg.reply("مرحبا بك عزيزي : اسمي هو ميجا")
- 
+@bot.message_handler(commands=['start'])
+def start(message):
+    bot.send_message(message.chat.id, "مرحبا أنا سانكا")
 
-@app.on_message(filters.private & ~filters.reply)
-async def echo(bot, msg):
-    a = msg.text
-    s = Ai(query = a)
-    await bot.send_message(chat_id=msg.chat.id, text=s.chat()) 
-    
+@bot.message_handler(content_types=['text'])
+def gptMessage(message):
+    resp = gpt(message.text)  # استخدم الدالة gpt لتوليد الرد
+    bot.send_message(message.chat.id, f'سانکا: {resp}')
 
-@app.on_message(filters.text)
-async def reply(bot, msg):
-  try:
-    if  msg.reply_to_message.from_user.is_bot:
-    	a = msg.text
-    	s = Ai(query = a)
-    	await msg.reply_text(text=s.chat(),quote=True)
-  except:pass
-    
-@app.on_message(filters.regex(r"^ميجا (.+)"),group=-1)
-async def reply_with_text(bot, msg):
-    a = msg.text.split(None,1)[1]
-    s = Ai(query = a)
-    await msg.reply_text(text=s.chat(),quote=True)
-    
-    
- 
-print("Run..")   
-app.run()
+bot.infinity_polling()
