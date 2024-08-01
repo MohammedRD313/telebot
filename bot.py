@@ -1,60 +1,44 @@
-import telebot
-from telebot import types
+from telethon import TelegramClient, events, Button
+import subprocess
+from random import choices, randint
 
-API_TOKEN = 'YOUR_API_TOKEN'
-CHANNEL_ID = '@your_channel_username'  # استبدل باسم قناتك
-DEV_USER_ID = 123456789  # Замените на ваш user ID
-bot = telebot.TeleBot(API_TOKEN)
+api_id = 9514755
+api_hash = '40e7041d06ea7b6ee1cf39b3188b3452'
+bot_token = '7486893779:AAE8jq5XIW3HWhTkYDiq5_Lnin_B7R-68Ig'
 
-# قائمة المستخدمين المحظورين
-banned_users = set()
-# قائمة المستخدمين المشتركين
-subscribed_users = set()
+Hussein = TelegramClient('aljoker_session', api_id, api_hash).start(bot_token=bot_token)
 
-# وظيفة للتحقق من الاشتراك
-def check_subscription(user_id):
-    try:
-        chat_member = bot.get_chat_member(CHANNEL_ID, user_id)
-        return chat_member.status in ['member', 'administrator', 'creator']
-    except Exception as e:
-        return False  # إذا حدث خطأ، المستخدم غير مشترك
+@Hussein.on(events.NewMessage(pattern='/start'))
+async def aljoker(event):
+    keyboard = [[Button.inline('إنشاء قاعدة بيانات', b'aljoker_postgres')]]
+    await event.reply(
+        f'''**اهلاً وسهلاً حبيبي {event.sender.first_name}،
+‎لإنشاء قاعدة بيانات خاصة بسورس العقرب بالضغط على زر إنشاء قاعدة بيانات**''',
+        buttons=keyboard
+    )
 
-@bot.message_handler(commands=['abmn'])
-def start(message):
-    user_id = message.from_user.id
+@Hussein.on(events.CallbackQuery)
+async def handle_callback(event):
+    if event.data == b'aljoker_postgres':
+        OHussein = ''.join(choices('abcdefghijklmnopqrstuvwxyz0123456789', k=randint(5, 10)))
+        await event.respond('**᯽︙ انتظرني أسوي لك قاعدة بيانات لعيونك🥰**')
 
-    # التحقق مما إذا كان المستخدم محظورًا
-    if user_id in banned_users:
-        bot.send_message(message.chat.id, "أنت محظور.")
-        return
+        create_user_aljoker = f'sudo su - postgres -c "psql -c \\"CREATE USER joker{OHussein} WITH PASSWORD \'joker{OHussein}\';\\""'
+        create_db_aljoker = f'sudo su - postgres bash -c "createdb joker{OHussein} -O joker{OHussein}"'
 
-    # التحقق من الاشتراك
-    if not check_subscription(user_id):
-        bot.send_message(message.chat.id, "الاشتراك إجباري، يرجى الاشتراك في القناة لتتمكن من استخدام البوت.")
-        return
+        create_user_process = subprocess.Popen(create_user_aljoker, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
+        user_res, user_err = create_user_process.communicate()
 
-    # إشعار بالدخول
-    bot.send_message(message.chat.id, f"مرحبًا، {message.from_user.first_name}!")
+        if 'CREATE ROLE' in user_res.decode():
+            create_db_process = subprocess.Popen(create_db_aljoker, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
+            db_res, db_err = create_db_process.communicate()
 
-@bot.message_handler(commands=['ban'])
-def ban_user(message):
-    if message.from_user.id != DEV_USER_ID:
-        bot.send_message(message.chat.id, "ليس لديك الإذن لاستخدام هذا الأمر.")
-        return
+            if not db_err:
+                await event.respond(f'''**وهاي قاعدة البيانات وتدلل علينا 😘 : `postgresql://joker{OHussein}:joker{OHussein}@localhost:5432/joker{OHussein}`**''')
+            else:
+                await event.respond(f'حدث خطأ أثناء إنشاء قاعدة البيانات:\n{db_err.decode()}')
+        else:
+            await event.respond(f'حدث خطأ أثناء إنشاء المستخدم:\n{user_err.decode()}')
 
-    try:
-        user_id = int(message.text.split()[1])
-        banned_users.add(user_id)
-        bot.send_message(message.chat.id, f"تم حظر المستخدم {user_id}.")
-    except (IndexError, ValueError):
-        bot.send_message(message.chat.id, "يرجى تحديد معرف صحيح للمستخدم لحظره.")
-
-@bot.message_handler(commands=['subscribe'])
-def subscribe(message):
-    user_id = message.from_user.id
-    subscribed_users.add(user_id)
-    bot.send_message(message.chat.id, "لقد اشتركت!")
-
-# بدء تشغيل البوت
-if __name__ == '__main__':
-    bot.polling(none_stop=True)
+print("البوت يشتغل استمتع 😍...")
+Hussein.run_until_disconnected()
