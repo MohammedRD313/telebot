@@ -4,3 +4,4 @@ psycopg2
 pyrogram
 kvsqlite
 telebot
+fake_email
