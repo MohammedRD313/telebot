@@ -9,7 +9,7 @@ admin = 7275336620 #ايدي المالك
 
 chat_id = "Scorpion_scorp" #يوزر القناة بدون @
 
-dev = "I_e_e_l" #يوزر المالك بدون @
+dev = "Scorpion_scorp" #يوزر المالك بدون @
 
 token = "7469344265:AAHfJGDn5NlfqFX9Vhx-8VWdVh10mIRk6Pk" # توكن
 
@@ -55,7 +55,7 @@ def welcome(message):
     	    bot.reply_to(message, f"*أهلا بك عزيزي المالك*", reply_markup=keyboard)
     	    btn = types.InlineKeyboardMarkup()
     	    btn.row_width = 1
-    	    ah = types.InlineKeyboardButton("المطور", url=f"t.me/{dev}")
+    	    ah = types.InlineKeyboardButton("قـنـاتـنـا", url=f"t.me/{dev}")
     	    gen_email = types.InlineKeyboardButton("إنشاء حساب بريد", callback_data='generate_email')
     	    get_ms = types.InlineKeyboardButton("جلب الرسائل الواردة", callback_data='fetch_messages')
     	    btn.add(ah,gen_email,get_ms)
