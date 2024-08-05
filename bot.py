@@ -11,7 +11,7 @@ chat_id = "Scorpion_scorp" #يوزر القناة بدون @
 
 dev = "Scorpion_scorp" #يوزر المالك بدون @
 
-token = "7469344265:AAHfJGDn5NlfqFX9Vhx-8VWdVh10mIRk6Pk" # توكن
+token = "7139024104:AAFQwCBzxo0Ru4bNxPc2QP8i6_k8_XO2bNc" # توكن
 
 bot = telebot.TeleBot(token, num_threads=50, skip_pending=True, parse_mode="markdown", disable_web_page_preview=True)
 generated_emails = {}
